@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+    <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>STOCK</title>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+        <script src="{{ url_for('static', filename='highcharts.js') }}"></script>
+<script src="{{ url_for('static', filename='modules/exporting.js') }}"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+</head>
+
+<script type="text/javascript" language="javascript">
+
+$.ajax({
+	url : '/statsajax',
+	method  : "post",
+	data : {
+		starttime : new Date(),
+		endtime : new Date()
+	},
+	success : function(result){
+		var data = JSON.parse(result);
+		console.log(data);
+		var categories = [];
+		var data1=[];
+		var data2=[];
+		var data3=[];
+		var data4=[];
+		var data5=[];
+		var data6=[];
+		for(var i = 0;i <data.length ;i++){
+			if($.inArray(data[i][0],categories)==-1){
+			categories.push(data[i][0]);
+			}
+                }
+	        for(var i = 0;i <data.length ;i++){
+                        data1.push(data[i][1]);
+			data2.push(data[i][2]);
+			data3.push(data[i][3]);
+			data4.push(data[i][4]);
+			data5.push(data[i][5]);
+			data6.push(data[i][6]);
+                }		
+		
+		draw(categories,data1,data2,data3,data4,data5,data6);
+	}
+});
+
+function draw(categories,data1,data2,data3,data4,data5,data6){
+    $('#container').highcharts({
+        chart: {
+            type: 'area'
+        },
+        title: {
+            text: 'Growth and Descend Percent'
+        },
+        subtitle: {
+            text: 'Source: American Stock'
+        },
+        xAxis: {
+            //categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
+            categories : categories,
+	    tickmarkPlacement: 'on',
+            title: {
+                enabled: false
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Percent'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f} millions)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            area: {
+                stacking: 'percent',
+                lineColor: '#ffffff',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1,
+                    lineColor: '#ffffff'
+                }
+            }
+        },
+        series: [{
+            name: '50%+',
+            data: data1
+        }, {
+            name: '10%~50%',
+            data: data2
+        }, {
+            name: '0%~10%',
+            data: data3
+        }, {
+            name: '-10%~0%',
+            data: data4
+        }, {
+            name: '-50%~-10%',
+            data: data5
+        },{
+            name: '-50%-',
+            data: data6
+        }]
+    });
+}
+</script>
+</head>
+<body>
+  <div id="container" style="min-width:700px;height:400px"></div>
+</body>
+</html>

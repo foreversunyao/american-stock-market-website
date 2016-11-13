@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+    <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>STOCK</title>
+        <!--<script type="text/javascript" src="{{ url_for('static', filename='jquery-3.0.0.min.js') }}"></script>-->
+        <!--<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>-->
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+</head>
+<body>
+<style>
+.ui-autocomplete{
+    width: 100px;
+    position: absolute;
+    top: 12px;
+    left: 118px;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #ccc;
+
+}
+</style>
+</head>
+<body>
+
+<script type="text/javascript" language="javascript">
+
+$(document).ready(function() {
+    $('#example').DataTable( {
+        "bProcessing" : true,
+	"deferRender": true,
+        "aoColumns": [
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+            { "orderSequence": [ "desc", "asc", "asc" ] },
+        ]
+    } );
+} );
+        </script>
+<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Code</th>
+                <th>open</th>
+                <th>high</th>
+                <th>low</th>
+		<th>close</th>
+                <th>volume</th>
+		<th>adclose</th>
+		<th>growth</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Date</th>
+                <th>Code</th>
+                <th>open</th>
+                <th>high</th>
+                <th>low</th>
+                <th>volume</th>
+		<th>close</th>
+                <th>adclose</th>
+                <th>growth</th>
+	     </tr>
+        </tfoot>
+        <tbody>
+            {% for message in datalist %}
+	     <tr>
+                <td>{{message[0]}}</td>
+                <td>{{message[1]}}</td>
+                <td>{{message[2]}}</td>
+                <td>{{message[3]}}</td>
+                <td>{{message[4]}}</td>
+                <td>{{message[5]}}</td>
+                <td>{{message[6]}}</td>
+		<td>{{message[7]}}</td>
+		<td>{{message[8]}}</td>
+            </tr> 
+	    {% endfor %}
+        </tbody>
+    </table>
+</body>
