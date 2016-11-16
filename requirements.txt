@@ -1,0 +1,5 @@
+Scrapy==0.16.5
+python-pip
+yum install libxslt-devel
+0,pip install--yum install -y python-pip
+1,scrapy install

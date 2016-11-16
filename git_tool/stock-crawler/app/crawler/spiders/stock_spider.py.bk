@@ -1,0 +1,39 @@
+# coding: utf-8
+from scrapy.spider import BaseSpider
+#from scrapy.xpathor import HtmlXPathSelector
+from scrapy.selector import Selector
+from crawler.items import StockItem
+from datetime import datetime, date, time
+import json
+class StockSpider(BaseSpider):
+	name = 'stock'
+	allowed_domains = ['br.financas.yahoo.com']
+	#start_urls = [
+	#	'http://br.financas.yahoo.com/q?s=GOOG',
+	#	'http://br.financas.yahoo.com/q?s=AAPL',
+	#	'http://br.financas.yahoo.com/q?s=FB',
+	#]
+	start_urls=''
+	content_file= open('/home/usstock/git/stock-crawler/app/crawler/spiders/stock_scrawl.list','r').read()
+	print content_file
+	def parse(self, response):
+		self.log('URL: %s' % response.url)
+
+		hxs = Selector(response)
+		item = StockItem()
+		title = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[1]/div/h2/text()').extract()
+		amount = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[2]/div/span[1]/span/text()').extract()
+		item['time'] = datetime.utcnow()
+		amount = ''.join(amount).replace(',','.')
+		title=''.join(title)
+		item['measurement']="stockrealtime"
+		item['tags']= {"stockname": title }
+		item['fields']={"value" : amount }
+		
+		#outputs = '[{"measurement":"stock_frequent_data","tags":{"stockname":"%s"},"time":"%s","fields":{"value":%s}}]' % (item['title'],item['time'],item['value'])
+		#item['outputjson']=outputs
+		#title = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[1]/div/h2/text()').extract()
+		#value = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[2]/div/span[1]/span/text()').extract()
+		#print "====title"+''.join(title)
+		#print "====value"+''.join(value)
+		return item

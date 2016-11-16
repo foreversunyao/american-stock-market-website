@@ -1,0 +1,39 @@
+# coding: utf-8
+from scrapy.spider import BaseSpider
+#from scrapy.xpathor import HtmlXPathSelector
+from scrapy.selector import Selector
+from crawler.items import StockItem
+from datetime import datetime, date, time
+import json
+class StockSpider(BaseSpider):
+	name = 'stock'
+	allowed_domains = ['br.financas.yahoo.com']
+	start_urls=[]
+	open('/home/usstock/git/stock-crawler/app/output/stock.json', 'w').close()
+	with open('/home/usstock/git/stock-crawler/app/crawler/spiders/stock_scrawl.list','r') as f:
+		start_urls=f.read().splitlines()
+		print(start_urls)
+	def parse(self, response):
+		self.log('URL: %s' % response.url)
+
+		hxs = Selector(response)
+		item = StockItem()
+		title = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[1]/div/h2/text()').extract()
+		price = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[2]/div/span[1]/span/text()').extract()
+		before_closed = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[2]/div/span[1]/span/text()').extract()
+		open_amount = hxs.xpath('//*[@id="yfi_rt_quote_summary"]/div[2]/div/span[1]/span/text()').extract()
+		item['time'] = datetime.utcnow()
+		price = ''.join(price).replace(',','.')
+		title=''.join(title)
+		item['measurement']="stockrealtime"
+		item['tags']= {"name": title }
+		item['tags']= {"code": title }
+		item['fields']= {"Volume": before_closed }
+		item['fields']= {"changepercent": before_closed }
+		item['fields']= {"High": before_closed }
+		item['fields']= {"Open": open_amount }
+		item['fields']= {"Prev Close": before_closed }
+		item['fields']= {"Low": before_closed }
+		item['fields']= {"Turnoverratio": before_closed }
+		item['fields']={"value" : price }
+		return item

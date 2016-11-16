@@ -1,0 +1,267 @@
+#!/usr/bin/env python
+'''
+Usage:
+  pystock-crawler symbols <exchanges> (-o OUTPUT) [-l LOGFILE] [-w WORKING_DIR]
+                                      [--sort]
+  pystock-crawler prices <symbols> (-o OUTPUT) [-s YYYYMMDD] [-e YYYYMMDD]
+                                   [-l LOGFILE] [-w WORKING_DIR] [--sort]
+  pystock-crawler reports <symbols> (-o OUTPUT) [-s YYYYMMDD] [-e YYYYMMDD]
+                                    [-l LOGFILE] [-w WORKING_DIR]
+                                    [-b BATCH_SIZE] [--sort]
+  pystock-crawler (-h | --help)
+  pystock-crawler (-v | --version)
+
+Options:
+  -h --help       Show this screen
+  -o OUTPUT       Output file
+  -s YYYYMMDD     Start date [default: ]
+  -e YYYYMMDD     End date [default: ]
+  -l LOGFILE      Log output [default: ]
+  -w WORKING_DIR  Working directory [default: .]
+  -b BATCH_SIZE   Batch size [default: 500]
+  --sort          Sort the result
+
+'''
+import codecs
+import math
+import os
+import sys
+import uuid
+
+from contextlib import contextmanager
+from docopt import docopt
+from scrapy import log
+
+try:
+    import pystock_crawler
+except ImportError:
+    # For development environment
+    sys.path.append(os.getcwd())
+    import pystock_crawler
+
+
+def random_string(length=5):
+    return uuid.uuid4().get_hex()[0:5]
+
+
+@contextmanager
+def tmp_scrapy_cfg():
+    content = '''# pystock_crawler scrapy.cfg
+[settings]
+default = pystock_crawler.settings
+
+[deploy]
+#url = http://localhost:6800/
+project = pystock_crawler
+'''
+    filename = os.path.abspath('./scrapy.cfg')
+    filename_bak = os.path.abspath('./scrapy-%s.cfg' % random_string())
+    if os.path.exists(filename):
+        log.msg(u'Renaming %s -> %s' % (filename, filename_bak))
+        os.rename(filename, filename_bak)
+    assert not os.path.exists(filename)
+    log.msg(u'Creating temporary config: %s' % filename)
+    with open(filename, 'w') as f:
+        f.write(content)
+
+    yield
+
+    if os.path.exists(filename):
+        log.msg(u'Deleting %s' % filename)
+        os.remove(filename)
+    if os.path.exists(filename_bak):
+        log.msg(u'Renaming %s -> %s' % (filename_bak, filename))
+        os.rename(filename_bak, filename)
+
+
+def run_scrapy_command(cmd):
+    log.msg('Command: %s' % cmd)
+    with tmp_scrapy_cfg():
+        os.system(cmd)
+
+
+def count_symbols(symbols):
+    if os.path.exists(symbols):
+        # If `symbols` is a file
+        with open(symbols) as f:
+            count = 0
+            for line in f:
+                line = line.rstrip()
+                if line and not line.startswith('#'):
+                    count += 1
+        return count
+
+    # If `symbols` is a comma-separated string
+    return len(symbols.split(','))
+
+
+def merge_files(target, sources, ignore_header=False):
+    log.msg(u'Merging files to %s' % target)
+    with codecs.open(target, 'w', 'utf-8') as out:
+        for i, source in enumerate(sources):
+            with codecs.open(source, 'r', 'utf-8') as f:
+                if ignore_header and i > 0:
+                    try:
+                        f.next()  # Ignore CSV header
+                    except StopIteration:
+                        break  # Empty file
+                out.write(f.read())
+
+    # Delete source files
+    for filename in sources:
+        log.msg(u'Deleting %s' % filename)
+        os.remove(filename)
+
+
+def crawl_symbols(exchanges, output, log_file):
+    command = 'scrapy crawl nasdaq -a exchanges="%s" -t symbollist' % exchanges
+
+    if output:
+        command += ' -o "%s"' % output
+    if log_file:
+        command += ' -s LOG_FILE="%s"' % log_file
+
+    run_scrapy_command(command)
+
+
+def crawl(spider, symbols, start_date, end_date, output, log_file, batch_size):
+    command = 'scrapy crawl %s -a symbols="%s" -t csv' % (spider, symbols)
+
+    if start_date:
+        command += ' -a startdate=%s' % start_date
+    if end_date:
+        command += ' -a enddate=%s' % end_date
+    if log_file:
+        command += ' -s LOG_FILE="%s"' % log_file
+
+    if spider == 'edgar':
+        # When crawling edgar filings, run the scrapy command batch by batch to
+        # work around issue #2
+        num_symbols = count_symbols(symbols)
+        num_batches = int(math.ceil(num_symbols / float(batch_size)))
+
+        # Store sub-files so we can merge them later
+        output_files = []
+
+        for i in xrange(num_batches):
+            start = i * batch_size
+            batch_cmd = command + ' -a limit=%d,%d' % (start, batch_size)
+            if output:
+                filename = '%s.%d' % (output, i + 1)
+                batch_cmd += ' -o "%s"' % filename
+                output_files.append(filename)
+
+            run_scrapy_command(batch_cmd)
+
+        merge_files(output, output_files, ignore_header=True)
+    else:
+        if output:
+            command += ' -o "%s"' % output
+        run_scrapy_command(command)
+
+
+def sort_symbols(filename):
+    log.msg(u'Sorting: %s' % filename)
+
+    with codecs.open(filename, 'r', 'utf-8') as f:
+        lines = [line for line in f]
+
+    lines = sorted(lines)
+
+    with codecs.open(filename, 'w', 'utf-8') as f:
+        f.writelines(lines)
+
+    log.msg(u'Sorted: %s' % filename)
+
+
+def sort_csv(filename):
+    log.msg(u'Sorting: %s' % filename)
+
+    with codecs.open(filename, 'r', 'utf-8') as f:
+        try:
+            headers = f.next()
+        except StopIteration:
+            log.msg(u'No need to sort empty file: %s' % filename)
+            return
+        lines = [line for line in f]
+
+    def line_cmp(line1, line2):
+        a = line1.split(',')
+        b = line2.split(',')
+        length = min(len(a), len(b))
+        i = 0
+        while 1:
+            result = cmp(a[i], b[i])
+            if result or i >= length:
+                return result
+            i += 1
+
+    lines = sorted(lines, cmp=line_cmp)
+
+    with codecs.open(filename, 'w', 'utf-8') as f:
+        f.write(headers)
+        f.writelines(lines)
+
+    log.msg(u'Sorted: %s' % filename)
+
+
+def print_version():
+    print 'pystock-crawler %s' % pystock_crawler.__version__
+
+
+def main():
+    args = docopt(__doc__)
+
+    symbols = args.get('<symbols>')
+    start_date = args.get('-s')
+    end_date = args.get('-e')
+    output = args.get('-o')
+    log_file = args.get('-l')
+    batch_size = args.get('-b')
+    sorting = args.get('--sort')
+    working_dir = args.get('-w')
+
+    if args['prices']:
+        spider = 'yahoo'
+    elif args['reports']:
+        spider = 'edgar'
+    else:
+        spider = None
+
+    if symbols and os.path.exists(symbols):
+        symbols = os.path.abspath(symbols)
+    if output:
+        output = os.path.abspath(output)
+    if log_file:
+        log_file = os.path.abspath(log_file)
+
+    try:
+        batch_size = int(batch_size)
+        if batch_size <= 0:
+            raise ValueError
+    except ValueError:
+        raise ValueError("BATCH_SIZE must be a positive integer, input is '%s'" % batch_size)
+
+    try:
+        os.chdir(working_dir)
+    except OSError as err:
+        sys.stderr.write('%s\n' % err)
+        return
+
+    if spider:
+        log.start(logfile=log_file)
+        crawl(spider, symbols, start_date, end_date, output, log_file, batch_size)
+        if sorting and output:
+            sort_csv(output)
+    elif args['symbols']:
+        log.start(logfile=log_file)
+        exchanges = args.get('<exchanges>')
+        crawl_symbols(exchanges, output, log_file)
+        if sorting and output:
+            sort_symbols(output)
+    elif args['-v'] or args['--version']:
+        print_version()
+
+
+if __name__ == '__main__':
+    main()

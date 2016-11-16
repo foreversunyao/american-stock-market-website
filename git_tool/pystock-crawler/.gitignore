@@ -1,0 +1,10 @@
+*.csv
+*.log
+*.pyc
+.coverage
+.scrapy/
+.~*
+build/
+dist/
+pystock_crawler.egg-info/
+pystock_crawler/tests/sample_data/
