@@ -1,0 +1,9 @@
+MySQL-python
+Flask==0.8
+Jinja2==2.6
+Werkzeug==0.8.3
+certifi==0.0.8
+chardet==1.0.1
+gunicorn==0.14.2
+Flask-WTF==0.14
+itsdangerous==0.24

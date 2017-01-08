@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>U.S. Stocks</title>
+        <!--<script type="text/javascript" src="{{ url_for('static', filename='jquery-3.0.0.min.js') }}"></script>-->
+        <!--<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>-->
+	<link rel="stylesheet" href="/static/jquery-ui.css">
+  	<script src="/static/jquery-1.9.1.js"></script>
+  	<script src="/static/jquery-ui.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='jquery.dataTables.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+	<link rel="stylesheet" href="/static/jquery.dataTables.min.css">
+<style>
+.ui-autocomplete{
+    width: 100px;
+    position: absolute;
+    top: 12px;
+    left: 118px;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+ body{padding:0px;margin:0px;background: white; font: 14px 'Lucida sans', Arial, Helvetica; color: #333; text-align: center;} a{color: #2A679F;} .form-wrapper{width: 450px; padding: 8px; margin: 50px auto; overflow: hidden; border-width: 1px; border-style: solid; border-color: #dedede #bababa #aaa #bababa; -moz-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444; -webkit-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444; box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; background-color: #f6f6f6; background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#eae8e8)); background-image: -webkit-linear-gradient(top, #f6f6f6, #eae8e8); background-image: -moz-linear-gradient(top, #f6f6f6, #eae8e8); background-image: -ms-linear-gradient(top, #f6f6f6, #eae8e8); background-image: -o-linear-gradient(top, #f6f6f6, #eae8e8); background-image: linear-gradient(top, #f6f6f6, #eae8e8);} .form-wrapper #search{width: 330px; height: 20px; padding: 10px 5px; float: left; font: bold 16px 'lucida sans', 'trebuchet MS', 'Tahoma'; border: 1px solid #ccc; -moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff; -webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff; box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;} .form-wrapper #search:focus{outline: 0; border-color: #aaa; -moz-box-shadow: 0 1px 1px #bbb inset; -webkit-box-shadow: 0 1px 1px #bbb inset; box-shadow: 0 1px 1px #bbb inset;} .form-wrapper #search::-webkit-input-placeholder{color: #999; font-weight: normal;} .form-wrapper #search:-moz-placeholder{color: #999; font-weight: normal;} .form-wrapper #search:-ms-input-placeholder{color: #999; font-weight: normal;} .form-wrapper #submit{float: right; border: 1px solid #00748f; height: 42px; width: 100px; padding: 0; cursor: pointer; font: bold 15px Arial, Helvetica; color: #fafafa; text-transform: uppercase; background-color: #0483a0; background-image: -webkit-gradient(linear, left top, left bottom, from(#31b2c3), to(#0483a0)); background-image: -webkit-linear-gradient(top, #31b2c3, #0483a0); background-image: -moz-linear-gradient(top, #31b2c3, #0483a0); background-image: -ms-linear-gradient(top, #31b2c3, #0483a0); background-image: -o-linear-gradient(top, #31b2c3, #0483a0); background-image: linear-gradient(top, #31b2c3, #0483a0); -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; text-shadow: 0 1px 0 rgba(0, 0 ,0, .3); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff; -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 1px 0 #fff;} .form-wrapper #submit:hover, .form-wrapper #submit:focus{background-color: #31b2c3; background-image: -webkit-gradient(linear, left top, left bottom, from(#0483a0), to(#31b2c3)); background-image: -webkit-linear-gradient(top, #0483a0, #31b2c3); background-image: -moz-linear-gradient(top, #0483a0, #31b2c3); background-image: -ms-linear-gradient(top, #0483a0, #31b2c3); background-image: -o-linear-gradient(top, #0483a0, #31b2c3); background-image: linear-gradient(top, #0483a0, #31b2c3);} .form-wrapper #submit:active{outline: 0; -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset; -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;} .form-wrapper #submit::-moz-focus-inner{border: 0;}
+
+ul,li{
+	list-style:none;
+	margin:0;
+	padding:0
+}
+
+.tools{
+    z-index:2;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: right;
+    color:#fff;
+    background:#000
+}
+
+.tools a{
+    text-decoration: none;
+    height: 50px;
+    display: inline-block;
+    color: #fff;
+}
+.tools a:hover{
+   background:#ddd;
+   color:#2A679F
+}
+.tools .today{
+	float:left;
+	margin-left:10px;
+}
+.search{
+	overflow:hidden;
+	padding-bottom:30px;
+background-image:-webkit-linear-gradient(left, rgba(249, 119, 119, 0.53), rgba(146, 243, 146, 0.71))
+}
+#stockcode{
+	width: 370px;
+    line-height: 28px;
+    float: left;
+}
+#submit-btn{
+    float: left;
+    margin-top: 3px;
+    margin-left: 10px;
+    padding: 7px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+#title{
+   margin-top:120px
+}
+.head-infos{
+	position:absolute;
+	left:10px;
+	top:65px;
+}
+.head-infos li{
+	left:auto;
+	list-style:none;
+	margin-right: 10px;
+}
+.head-infos ul{
+	float:left
+}
+#news{overflow:hidden}
+#news .news-module{
+	width:50%;	
+	float : left;
+	text-align:left
+}
+#news .news-module li{
+	padding:3px 3px 3px 0;
+}
+#news .upnews,
+#news .fallnews{
+	padding:10px 30px 20px;
+}
+#news .upnews h4{color:green}
+#news .fallnews h4{color:red}
+#container{
+	margin-top:50px;
+	padding:10px 30px
+}
+</style>
+</head>
+<body>
+<div class="head-infos">
+	<div class="top-fall"></div>
+	<div class="top-gains"></div>
+</div>
+
+
+<div class="tools">
+	<span class="today"></span>
+	<a href="./stats"> &nbsp; &nbsp; &nbsp; &nbsp;    Stock Stats  &nbsp; &nbsp; &nbsp;      </a>
+	<a href="./info"> &nbsp; &nbsp; &nbsp; &nbsp;    Stock Corp  &nbsp; &nbsp; &nbsp;      </a>
+</div>
+<script>
+	var myDate = new Date();
+	var date = (myDate.getMonth() + 1) + "-" + myDate.getDate() + "-" + myDate.getFullYear()
+
+	$('.today').html(date);
+</script>
+
+
+<div class="search">
+	<h1 id="title">U.S. Stocks</h1>
+	<div class="form-wrapper">
+        	 <input id="stockcode" name="stockcode" type="text" placeholder="Search for American stock code ..." required >
+	 	<input id="submit-btn" class="button" type="submit" value="Search">
+	</div>
+</div>
+
+
+
+<div id="news">
+	<div class="news-module-upnews news-module"></div>
+	<div class="news-module-fallnews news-module"></div>
+</div>
+<div id="container"></div>
+
+
+</div>
+
+
+
+<script type="text/javascript">
+$.ajax({
+    url : '/initdatatop',
+    method : 'post',
+    success : function(data){
+        var data = JSON.parse(data);
+	if(data.length > 0){
+		var html = "<ul><li>Top Fall</li>";
+		for(var i=0 ;i<data.length; i++){
+			html += '<li>'+data[i][0]+'</li>';
+		}
+	
+		html += '</ul>';
+		$('.top-fall').html(html);
+    	}
+    }
+})
+$.ajax({
+    url : '/initdatalow',
+    method : 'post',
+    success : function(data){
+	var data = JSON.parse(data);
+     	if(data.length > 0){
+		var html = "<ul><li>Top Gains</li>";
+		for(var i=0; i<data.length; i++){
+			html += '<li>'+data[i][0]+'</li>';
+		}
+		html += '</ul>';
+		$('.top-gains').html(html);
+	}
+    }
+})
+$.ajax({
+    url : '/initdataidx',
+    method : 'post',
+    success : function(data){
+	var data = JSON.parse(data);
+    }
+})
+
+$(function() {
+	var availableTags = {{stockcodelistnew|safe}}
+    	$( "#stockcode" ).autocomplete({
+      	source: availableTags
+    });
+});
+
+function search(value){
+	var searchVal = value ? value :$('#stockcode').val();
+//We are now draw the chart
+$.ajax({
+    url : '/search',
+    method : 'post',
+    data : {
+        stockcode : searchVal
+    },
+    success : function(data){
+        draw(data);
+
+    }
+});
+
+$.ajax({
+        url : '/searcharticleup',
+        method : 'post',
+        data : {
+                stockcode : searchVal
+        },
+        success : function(response){
+                var data = JSON.parse(response);
+                var html = ['<div class="upnews">',
+                '<h4>UP NEWS</h4>',
+                '<ul>'].join('');
+                
+                for(var i=0;i<data.length;i++){
+                        html += '<li><a href="'+data[i][0]+'">'+data[i][1]+'</a></li>';
+                }     
+
+		html += '</ul></div>';
+                $('#news .news-module-upnews').html(html);
+        }
+})
+$.ajax({
+        url : '/searcharticlefall',
+        method : 'post',
+        data : {
+                stockcode : searchVal
+        },
+        success : function(response){
+                var data = JSON.parse(response);
+                var html = ['<div class="fallnews">',
+                '<h4>FALL NEWS</h4>',
+                '<ul>'].join('');
+                console.log(data);
+		 for(var i=0;i<data.length;i++){
+                        html += '<li><a href="'+data[i][0]+'">'+data[i][1]+'</a></li>';
+                 }
+
+                html += '</ul></div>';
+                $('#news .news-module-fallnews').html(html);
+        }
+})
+
+
+}
+
+search("amzn");
+$('#submit-btn').click(function(){search()});
+
+
+function draw(data){
+        // Create the chart
+        var data = JSON.parse(data);
+	
+        // split the data set into ohlc and voluime
+
+        var ohlc = [],
+            volume = [],
+            dataLength = data.length,
+            // set the allowed units for data grouping
+            groupingUnits = [[
+                'week',                         // unit name
+                [1]                             // allowed multiples
+            ], [
+                'month',
+                [1, 2, 3, 4, 6]
+            ]],
+
+            i = 0;
+
+        for (i; i < dataLength; i += 1) {
+            ohlc.push([
+                data[i][0], // the date
+                data[i][1], // open
+                data[i][2], // high
+                data[i][3], // low
+                data[i][4] // close
+            ]);
+
+            volume.push([
+                data[i][0], // the date
+                data[i][5] // the volume
+            ]);
+        }
+
+
+        // create the chart
+        $('#container').highcharts('StockChart', {
+
+            rangeSelector: {
+                selected: 1
+            },
+
+            title: {
+                text: data[0][6]+' Historical'
+            },
+
+            yAxis: [{
+                labels: {
+                    align: 'right',
+                    x: -3
+                },
+                title: {
+                    text: 'OHLC'
+                },
+                height: '60%',
+                lineWidth: 2
+            }, {
+                labels: {
+                    align: 'right',
+                    x: -3
+                },
+                title: {
+                    text: 'Volume'
+                },
+                top: '65%',
+                height: '35%',
+                offset: 0,
+                lineWidth: 2
+            }],
+
+            series: [{
+                type: 'candlestick',
+                name: data[0][6],
+                data: ohlc,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+            }, {
+                type: 'column',
+                name: 'Volume',
+                data: volume,
+                yAxis: 1,
+                dataGrouping: {
+                    units: groupingUnits
+                }
+            }]
+        });
+}
+
+</script>
+<script src="{{ url_for('static', filename='highstock.js') }}"></script>
+<script src="{{ url_for('static', filename='modules/exporting.js') }}"></script>
+
+
+
+</body>
+</html>
