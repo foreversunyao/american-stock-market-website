@@ -1,33 +1,23 @@
-#
-# MySQL Dockerfile
-#
-# https://github.com/dockerfile/mysql
-#
+FROM ubuntu:trusty
+MAINTAINER Vasan
 
-# Pull base image.
-FROM ubuntu:16.04
+# Install packages: mysql adds a root user with no password
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+  apt-get -yq install mysql-server && \
+  rm -rf /var/lib/apt/lists/*
 
-# Install MySQL.
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server && \
-  rm -rf /var/lib/apt/lists/* && \
-  sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/my.cnf && \
-  sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
-  echo "mysqld_safe &" > /tmp/config && \
-  echo "mysqladmin --silent --wait=30 ping || exit 1" >> /tmp/config && \
-  echo "mysql -e 'GRANT ALL PRIVILEGES ON *.* TO \"root\"@\"%\" identified by \"admin\" WITH GRANT OPTION;flush privileges'" >> /tmp/config && \
-  bash /tmp/config && \
-  rm -f /tmp/config
+RUN sed -i 's|/var/lib/mysql|/var/lib/mysql2|g' /etc/mysql/my.cnf
+# Change mysql to listen on 0.0.0.0
+ADD bind_0.cnf /etc/mysql/conf.d/bind_0.cnf
 
-# Define mountable directories.
-VOLUME ["/etc/mysql", "/var/lib/mysql"]
+ADD load_data.sql /etc/mysql/load_data.sql
+ADD init.sh /init.sh
+# setup our entry point
+RUN chmod 755 /*.sh
+RUN /init.sh
+#ENTRYPOINT ["/init.sh"]
 
-# Define working directory.
-WORKDIR /data
-
-# Define default command.
+EXPOSE 3306
 CMD ["mysqld_safe"]
 
-# Expose ports.
-EXPOSE 3307

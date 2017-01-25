@@ -1,0 +1,12 @@
+[2017-01-08 13:00:55,970][INFO ][node                     ] [Ritchie Gilmore] version[1.7.3], pid[1], build[05d4530/2015-10-15T09:14:17Z]
+[2017-01-08 13:00:55,971][INFO ][node                     ] [Ritchie Gilmore] initializing ...
+[2017-01-08 13:00:56,033][INFO ][plugins                  ] [Ritchie Gilmore] loaded [], sites []
+[2017-01-08 13:00:56,064][INFO ][env                      ] [Ritchie Gilmore] using [1] data paths, mounts [[/data (/dev/sda1)]], net usable_space [7.1gb], net total_space [9.6gb], types [ext4]
+[2017-01-08 13:00:57,860][INFO ][node                     ] [Ritchie Gilmore] initialized
+[2017-01-08 13:00:57,860][INFO ][node                     ] [Ritchie Gilmore] starting ...
+[2017-01-08 13:00:58,048][INFO ][transport                ] [Ritchie Gilmore] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/172.17.0.2:9300]}
+[2017-01-08 13:00:58,059][INFO ][discovery                ] [Ritchie Gilmore] elasticsearch/QXjE1T08Tj-AMVF10jR73Q
+[2017-01-08 13:01:01,919][INFO ][cluster.service          ] [Ritchie Gilmore] new_master [Ritchie Gilmore][QXjE1T08Tj-AMVF10jR73Q][e9f637a41bbb][inet[/172.17.0.2:9300]], reason: zen-disco-join (elected_as_master)
+[2017-01-08 13:01:01,950][INFO ][gateway                  ] [Ritchie Gilmore] recovered [0] indices into cluster_state
+[2017-01-08 13:01:01,953][INFO ][http                     ] [Ritchie Gilmore] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/172.17.0.2:9200]}
+[2017-01-08 13:01:01,953][INFO ][node                     ] [Ritchie Gilmore] started

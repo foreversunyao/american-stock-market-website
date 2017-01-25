@@ -1,0 +1,5 @@
+[2017-01-16 12:28:02,287][INFO ][cluster.routing.allocation.decider] [Ritchie Gilmore] low disk watermark [85%] exceeded on [QXjE1T08Tj-AMVF10jR73Q][Ritchie Gilmore] free: 1.3gb[13.5%], replicas will not be assigned to this node
+[2017-01-16 12:28:32,269][INFO ][cluster.routing.allocation.decider] [Ritchie Gilmore] low disk watermark [85%] exceeded on [QXjE1T08Tj-AMVF10jR73Q][Ritchie Gilmore] free: 1.1gb[12.4%], replicas will not be assigned to this node
+[2017-01-16 12:29:02,270][INFO ][cluster.routing.allocation.decider] [Ritchie Gilmore] low disk watermark [85%] exceeded on [QXjE1T08Tj-AMVF10jR73Q][Ritchie Gilmore] free: 1.3gb[13.9%], replicas will not be assigned to this node
+[2017-01-16 12:29:32,274][INFO ][cluster.routing.allocation.decider] [Ritchie Gilmore] low disk watermark [85%] exceeded on [QXjE1T08Tj-AMVF10jR73Q][Ritchie Gilmore] free: 1.3gb[13.9%], replicas will not be assigned to this node
+[2017-01-16 12:30:02,274][INFO ][cluster.routing.allocation.decider] [Ritchie Gilmore] low disk watermark [85%] exceeded on [QXjE1T08Tj-AMVF10jR73Q][Ritchie Gilmore] free: 1.3gb[13.9%], replicas will not be assigned to this node

@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt-get update -y
 
-RUN apt-get install -y  python python-pip python-dev build-essential libmysqlclient-dev
+RUN apt-get install -y python python-pip python-dev build-essential libmysqlclient-dev
 
 
 # Add requirements.txt
