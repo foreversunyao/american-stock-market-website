@@ -1,0 +1,6 @@
+elasticsearch
+ez_setup
+libcurl4-gnutls-dev
+librtmp-dev
+vaderSentiment
+pycurl

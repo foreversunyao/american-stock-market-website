@@ -16,7 +16,7 @@ j_output = json.dumps(result, indent=4, ensure_ascii=False )
 data = json.loads(j_output)
 
 try:
-        conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='admin',db='db_stock',port=3307,charset='utf8')
+        conn=MySQLdb.connect(host='stockserver',user='root',passwd='admin',db='db_stock',port=3306,charset='utf8')
         cur=conn.cursor()
 
 

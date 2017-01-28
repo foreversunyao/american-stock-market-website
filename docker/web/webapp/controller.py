@@ -105,7 +105,6 @@ def stockarticleupController():
 
 @app.route("/searcharticlefall",methods=['GET','POST'])
 def stockarticlefallController():
-    form = StockSearch()
     code = request.form['stockcode']
     c=db.query("select name from tb_americanstockcode where code='%s' and name is not null limit 1" % code )
     codename = c.fetchone()[0]

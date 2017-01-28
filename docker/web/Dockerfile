@@ -13,6 +13,7 @@ RUN pip install -r requirements.txt
  
 # Create app directory
 COPY webapp /webapp
+COPY crawler /crawler 
  
 # Set the default directory for our environment
 ENV HOME /webapp

@@ -7,3 +7,5 @@ chardet==1.0.1
 gunicorn==0.14.2
 Flask-WTF==0.14
 itsdangerous==0.24
+ystockquote
+gnp==0.0.4
