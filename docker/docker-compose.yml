@@ -5,11 +5,13 @@ web:
     links:
       - db
       - elasticsearch
+    hostname: stockserver
 
 db:
+    hostname: stockserver
     build: ./mysql
     ports:
-      - "3307:3307"
+      - "3306:3306"
 
 elasticsearch:
     image: "elasticsearch"

@@ -1,23 +1,7 @@
-FROM ubuntu:trusty
-MAINTAINER Vasan
-
-# Install packages: mysql adds a root user with no password
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && \
-  apt-get -yq install mysql-server && \
-  rm -rf /var/lib/apt/lists/*
-
-RUN sed -i 's|/var/lib/mysql|/var/lib/mysql2|g' /etc/mysql/my.cnf
-# Change mysql to listen on 0.0.0.0
-ADD bind_0.cnf /etc/mysql/conf.d/bind_0.cnf
-
-ADD load_data.sql /etc/mysql/load_data.sql
-ADD init.sh /init.sh
-# setup our entry point
-RUN chmod 755 /*.sh
-RUN /init.sh
-#ENTRYPOINT ["/init.sh"]
-
+FROM  mysql
+ENV MYSQL_ROOT_PASSWORD=admin \
+  MYSQL_DATABASE=db_stock \
+  MYSQL_USER=admin \
+  MYSQL_PASSWORD=admin
+COPY load_data.sql /docker-entrypoint-initdb.d/load_data.sql
 EXPOSE 3306
-CMD ["mysqld_safe"]
-

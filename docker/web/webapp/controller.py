@@ -25,7 +25,7 @@ class StockSearch(Form):
 class DB:
   conn = None
   def connect(self):
-    self.conn = MySQLdb.connect(host="127.0.0.1",user="root", passwd="admin",port=3307,db="db_stock", charset="utf8")
+    self.conn = MySQLdb.connect(host="stockserver",user="root", passwd="admin",port=3306,db="db_stock", charset="utf8")
     self.conn.autocommit = True
   def query(self, sql):
     try:
