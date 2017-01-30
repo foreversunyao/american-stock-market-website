@@ -16,11 +16,13 @@ try:
 	conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='admin',db='db_stock',port=3306)
 	cur=conn.cursor()
 	init=0
-	cur.execute('select id,search_key,link,title from tb_news_search')
+	cur.execute('select id,search_key,link,title from tb_news_search where id >27')
 	articlelist=cur.fetchall()
 	for article in articlelist:
+		print article[1]
+		print article[0]
 		idx= str(article[1]).lower()
-		res= str(es.get(index=idx, doc_type='article', id=article[0]))
+		res= es.get(index=idx, doc_type='article', id=article[0])
 		vs = analyzer.polarity_scores(res)
 		vs_neg=vs['neg']
 		print article[0]

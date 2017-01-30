@@ -14,7 +14,8 @@ db:
       - "3306:3306"
 
 elasticsearch:
-    image: "elasticsearch"
+    hostname: stockserver
+    build: ./elasticsearch
     ports:
      - "9200:9200"
      - "9300:9300"
