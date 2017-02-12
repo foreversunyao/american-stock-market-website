@@ -13,7 +13,7 @@ s_date = sys.argv[1]
 e_date = sys.argv[2]
 
 try:
-	conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='admin',db='db_stock',port=3306)
+	conn=MySQLdb.connect(host='stockserver',user='root',passwd='admin',db='db_stock',port=3306)
 	cur=conn.cursor()
 	#sql= "delete from tb_stockinfo_day where stat_date>='s%' and end_date<'s%'" % (s_date,e_date)
 	cur.execute('delete from tb_stockinfo_day where stat_date>="%s" and stat_date<"%s"' % (s_date,e_date))

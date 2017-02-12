@@ -9,3 +9,7 @@ Flask-WTF==0.14
 itsdangerous==0.24
 ystockquote
 gnp==0.0.4
+elasticsearch
+ez_setup
+vaderSentiment
+pycurl

@@ -11,7 +11,7 @@ import cStringIO
  
 
 try:
-	conn=MySQLdb.connect(host="stockserver",user='root',passwd='admin',db='db_stock',port=3306)
+	conn=MySQLdb.connect(host="127.0.0.1",user='root',passwd='admin',db='db_stock',port=3306)
 	cur=conn.cursor()
 	init=0
 	cur.execute('select id,search_key,link,title from tb_news_search')
@@ -24,10 +24,11 @@ try:
 		c.setopt(c.WRITEFUNCTION, buf.write)
 		c.perform()
 		idx= str(article[1]).lower()
-		doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
 		try:
+			doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
 			res = es.index(index=idx, doc_type='article', id=init, body={'aa':'bb'})
 		except :
+			print "error"+article[3]
 			continue
 	cur.close()
 	conn.close()

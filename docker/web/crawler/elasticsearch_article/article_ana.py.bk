@@ -13,7 +13,7 @@ import cStringIO
 
 try:
 	analyzer = SentimentIntensityAnalyzer()
-	conn=MySQLdb.connect(host="stockserver",user='root',passwd='admin',db='db_stock',port=3306)
+	conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='admin',db='db_stock',port=3306)
 	cur=conn.cursor()
 	init=0
 	cur.execute('select id,search_key,link,title from tb_news_search')
@@ -22,16 +22,19 @@ try:
 		print article[1]
 		print article[0]
 		idx= str(article[1]).lower()
-		res= es.get(index=idx, doc_type='article', id=article[0])
-		vs = analyzer.polarity_scores(res)
-		vs_neg=vs['neg']
-		print article[0]
-		if vs_neg > 0.4 :
-			 cur.execute("update tb_news_search set tag=2 where id=%s",(article[0],))
-			 conn.commit()
-		else:
-			 cur.execute("update tb_news_search set tag=1 where id=%s",(article[0],))
-			 conn.commit()
+		try:
+			res= es.get(index=idx, doc_type='article', id=article[0])
+			vs = analyzer.polarity_scores(res)
+			vs_neg=vs['neg']
+			print article[0]
+			if vs_neg > 0.4 :
+				 cur.execute("update tb_news_search set tag=2 where id=%s",(article[0],))
+			 	 conn.commit()
+			else:
+				 cur.execute("update tb_news_search set tag=1 where id=%s",(article[0],))
+			 	 conn.commit()
+		except:
+			continue
 	cur.close()
 	conn.close()
 except MySQLdb.Error,e:
