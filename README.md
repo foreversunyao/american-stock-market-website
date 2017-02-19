@@ -14,7 +14,7 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 ## Installation (Using Docker container)
 
-1. Download project by "git clone "
+1. Download project by "git clone https://github.com/foreversunyao/usstock.git "
 
 2. cd Docker
 
