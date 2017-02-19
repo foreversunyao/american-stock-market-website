@@ -16,7 +16,7 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 1. Download project by "git clone https://github.com/foreversunyao/usstock.git "
 
-2. cd Docker
+2. cd usstock/docker
 
 3. docker-compose up
 
