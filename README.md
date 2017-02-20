@@ -20,7 +20,8 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 3. docker-compose up
 
-4. 
+4. docker exec -it $1 sh /crawler/stockinfo_collect/collect_daily.sh 
+   docker exec -it $1 python /crawler/elasticsearch_article/article.py
 
 
 
@@ -31,4 +32,4 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 ## FAQ
 
-**Q: How is this different than confd?**<br>
+**Q: ?**<br>
