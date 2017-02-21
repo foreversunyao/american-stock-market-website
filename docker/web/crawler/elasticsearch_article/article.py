@@ -26,7 +26,7 @@ try:
 		idx= str(article[1]).lower()
 		doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
 		try:
-			res = es.index(index=idx, doc_type='article', id=init, body={'aa':'bb'})
+			res = es.index(index=idx, doc_type='article', id=init, body=doc)
 		except :
 			continue
 	cur.close()
