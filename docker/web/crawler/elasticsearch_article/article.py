@@ -16,7 +16,7 @@ class JSONSerializerPython2(serializer.JSONSerializer):
         except (ValueError, TypeError) as e:
             raise exceptions.SerializationError(data, e)
 
-es = Elasticsearch(serializer=JSONSerializerPython2())
+es = Elasticsearch(['stockserver'],serializer=JSONSerializerPython2())
 #!/usr/bin/env python2.7
 import json
 import MySQLdb
@@ -40,12 +40,17 @@ try:
 		c.setopt(c.WRITEFUNCTION, buf.write)
 		c.perform()
 		idx= str(article[1]).lower()
-		doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
-		try:
-			res = es.index(index=idx, doc_type='article', id=init, body=doc)
-		except :
-			continue
+		print idx
+		print article[0]
+		#print str(buf.getvalue())
+		#doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
+		doc={'title':article[3],'text':buf.getvalue().decode('utf-8')}
+		#try:
+		res = es.index(index=idx.replace(" ", ""), doc_type='article', id=article[0], body=doc)
+		#except :
+			#continue
 	cur.close()
 	conn.close()
-except MySQLdb.Error,e:
-	print "Mysql Error %d:%s"%(e.args[0],e.args[1])
+except Exception as e:
+	print e.args[0]
+	print e.args[1]

@@ -1,6 +1,3 @@
-  use db_stock;CREATE TABLE tb_americanstockcode (id int(11) NOT NULL AUTO_INCREMENT, code varchar(512) DEFAULT NULL, name varchar(1024) DEFAULT NULL, create_time timestamp , update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-   use db_stock;CREATE TABLE tb_stockinfo_day ( id int(11) NOT NULL AUTO_INCREMENT, stat_date date DEFAULT NULL, stock_code varchar(64) DEFAULT NULL, open decimal(18,6) DEFAULT NULL, high decimal(18,6) DEFAULT NULL, low decimal(18,6) DEFAULT NULL, close decimal(18,6) DEFAULT NULL, volume bigint(32) DEFAULT NULL, adjclose decimal(18,6) DEFAULT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-   use db_stock;create table tb_news_search(id bigint auto_increment primary key,stat_date datetime,search_key varchar(1024),category varchar(64),source varchar(1024),content_snippet varchar(1024),link varchar(1024),title varchar(1024),tag int);
 insert into db_stock.tb_americanstockcode(code,name) values('Symbol',"Name");
 insert into db_stock.tb_americanstockcode(code,name) values('DDD',"3D Systems Corporation");
 insert into db_stock.tb_americanstockcode(code,name) values('MMM',"3M Company");

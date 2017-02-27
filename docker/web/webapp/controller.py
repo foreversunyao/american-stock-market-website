@@ -98,8 +98,8 @@ def stockarticleupController():
 #    form = StockSearch()
     code = request.form['stockcode']
     c=db.query("select name from tb_americanstockcode where code='%s' and name is not null limit 1" % code )
-    codename = c.fetchone()[0]
-    c2=db.query("select link,title,tag from tb_news_search where search_key='%s' and tag =2 limit 5" % (codename))
+    codename = str(c.fetchone()[0])
+    c2=db.query("select link,title,tag from tb_news_search where search_key='%s' and tag =2 limit 5" % codename)
     contents=c2.fetchall()
     return json.dumps(contents,cls=ComplexEncoder)
 
@@ -108,8 +108,8 @@ def stockarticlefallController():
 #    form = StockSearch()
     code = request.form['stockcode']
     c=db.query("select name from tb_americanstockcode where code='%s' and name is not null limit 1" % code )
-    codename = c.fetchone()[0]
-    c2=db.query("select link,title,tag from tb_news_search where search_key='%s' and tag=1 limit 5" % (codename))
+    codename = str(c.fetchone()[0])
+    c2=db.query("select link,title,tag from tb_news_search where search_key='%s' and tag=1 limit 5" % codename )
     contents=c2.fetchall()
     return json.dumps(contents,cls=ComplexEncoder)
 
