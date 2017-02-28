@@ -33,22 +33,26 @@ try:
 	cur.execute('select id,search_key,link,title from tb_news_search')
 	articlelist=cur.fetchall()
 	for article in articlelist:
-		print article[0]
-		buf = cStringIO.StringIO()
-		c=pycurl.Curl()
-		c.setopt(c.URL,article[2])
-		c.setopt(c.WRITEFUNCTION, buf.write)
-		c.perform()
-		idx= str(article[1]).lower()
-		print idx
-		print article[0]
+		try:		
+			print article[0]
+			buf = cStringIO.StringIO()
+			c=pycurl.Curl()
+			c.setopt(c.URL,article[2])
+			c.setopt(c.WRITEFUNCTION, buf.write)
+			c.perform()
+			idx= str(article[1]).lower()
+			print idx
+			print article[0]
 		#print str(buf.getvalue())
 		#doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
-		doc={'title':article[3],'text':buf.getvalue().decode('utf-8')}
+			doc={'title':article[3],'text':buf.getvalue().decode('utf-8')}
 		#try:
-		res = es.index(index=idx.replace(" ", ""), doc_type='article', id=article[0], body=doc)
+			res = es.index(index=idx.replace(" ", ""), doc_type='article', id=article[0], body=doc)
 		#except :
 			#continue
+		except Exception as e:
+			print e.args[0]
+			print e.args[1]
 	cur.close()
 	conn.close()
 except Exception as e:

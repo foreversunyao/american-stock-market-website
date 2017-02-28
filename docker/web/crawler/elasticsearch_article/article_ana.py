@@ -35,19 +35,23 @@ try:
 	cur.execute('select id,search_key,link,title from tb_news_search')
 	articlelist=cur.fetchall()
 	for article in articlelist:
-		print article[1]
-		print article[0]
-		idx= str(article[1]).lower()
-		res= es.get(index=idx.replace(" ", ""), doc_type='article', id=int(str(article[0])))
-		vs = analyzer.polarity_scores(str(res))
-		vs_neg=vs['neg']
-		print article[0]
-		if vs_neg > 0.4 :
-			 cur.execute("update tb_news_search set tag=2 where id=%s",(article[0],))
-			 conn.commit()
-		else:
-			 cur.execute("update tb_news_search set tag=1 where id=%s",(article[0],))
-			 conn.commit()
+		try:
+			print article[1]
+			print article[0]
+			idx= str(article[1]).lower()
+			res= es.get(index=idx.replace(" ", ""), doc_type='article', id=int(str(article[0])))
+			vs = analyzer.polarity_scores(str(res))
+			vs_neg=vs['neg']
+			print article[0]
+			if vs_neg > 0.4 :
+				 cur.execute("update tb_news_search set tag=2 where id=%s",(article[0],))
+				 conn.commit()
+			else:
+				 cur.execute("update tb_news_search set tag=1 where id=%s",(article[0],))
+				 conn.commit()
+		except Exception as e:
+			print e.args[0]
+			print e.args[1]
 	cur.close()
 	conn.close()
 except Exception as e:
