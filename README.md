@@ -20,16 +20,26 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 3. docker-compose up
 
-4. docker exec -it $1 sh /crawler/stockinfo_collect/collect_daily.sh 
-   docker exec -it $1 python /crawler/elasticsearch_article/article.py
+
 
 
 
 ## Quick Example
+######init data
+docker exec -it dockerid sh /crawler/stockinfo_collect/collect_daily.sh --collect stock data (price volume and so on)
 
+docker exec -it dockerid python /crawler/gnp/gnp_search.py "Alphabet Inc." --search alphabet news by google
 
+docker exec -it dockerid python /crawler/elasticsearch_article/article.py --load article to elasticsearch
 
+docker exec -it dockerid python /crawler/elasticsearch_article/article_ana.py --analyze article by "SentimentIntensityAnalyzer"
 
+######open web
+http://127.0.0.1:8888/index
+######search result
+images:
+   ![alt tag](https://github.com/foreversunyao/usstock/blob/master/Screen%20Shot%202017-03-09%20at%2012.10.42%20PM.png)
+   
 ## FAQ
 
 **Q: ?**<br>
