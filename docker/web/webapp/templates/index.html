@@ -224,7 +224,7 @@ $.ajax({
                 var html = ['<div class="upnews">',
                 '<h4>UP NEWS</h4>',
                 '<ul>'].join('');
-                
+		console.log(data);
                 for(var i=0;i<data.length;i++){
                         html += '<li><a href="'+data[i][0]+'">'+data[i][1]+'</a></li>';
                 }     
@@ -244,17 +244,14 @@ $.ajax({
                 var html = ['<div class="fallnews">',
                 '<h4>FALL NEWS</h4>',
                 '<ul>'].join('');
-                console.log(data);
 		 for(var i=0;i<data.length;i++){
                         html += '<li><a href="'+data[i][0]+'">'+data[i][1]+'</a></li>';
                  }
-
+		console.log(data);
                 html += '</ul></div>';
                 $('#news .news-module-fallnews').html(html);
         }
 })
-
-
 }
 
 //search("amzn");

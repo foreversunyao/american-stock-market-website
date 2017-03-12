@@ -25,7 +25,7 @@ class StockSearch(Form):
 class DB:
   conn = None
   def connect(self):
-    self.conn = MySQLdb.connect(host="stockserver",user="root", passwd="admin",port=3306,db="db_stock", charset="utf8")
+    self.conn = MySQLdb.connect(host="127.0.0.1",user="root", passwd="admin",port=3306,db="db_stock", charset="utf8")
     self.conn.autocommit = True
   def query(self, sql):
     try:
@@ -67,18 +67,18 @@ def getstockcode():
 
 @app.route("/initdatatop",methods=['GET','POST'])
 def gettop():
-    c=db.query("select stock_code,close,truncate((close-open)*100/close,2)  from tb_stockinfo_day where stat_date=(select max(stat_date)-10 from tb_stockinfo_day) order by (close-open)/open desc limit 5")
+    c=db.query("select stock_code,close,truncate((close-open)*100/close,2)  from tb_stockinfo_day where stat_date=(case weekday(stat_date) when 0 then subdate(stat_date,3) WHEN 6 THEN SUBDATE(CURRENT_DATE,2) WHEN 5 THEN SUBDATE(CURRENT_DATE,1) else subdate(stat_date,1) end) order by (close-open)/open desc limit 5")
     topdata=c.fetchall()
     return json.dumps(topdata,cls=ComplexEncoder)
 
 @app.route("/initdatalow",methods=['GET','POST'])
 def getdown():   
-    c2=db.query("select stock_code,close,truncate((close-open)*100/close,2)  from tb_stockinfo_day where stat_date=(select max(stat_date)-10 from tb_stockinfo_day) order by (close-open)/open asc limit 5")
+    c2=db.query("select stock_code,close,truncate((close-open)*100/close,2)  from tb_stockinfo_day where stat_date=(case weekday(stat_date) when 0 then subdate(stat_date,3) WHEN 6 THEN SUBDATE(CURRENT_DATE,2) WHEN 5 THEN SUBDATE(CURRENT_DATE,1) else subdate(stat_date,1) end) order by (close-open)/open asc limit 5")
     lowdata=c2.fetchall()
     return json.dumps(lowdata,cls=ComplexEncoder)
 @app.route("/initdataidx",methods=['GET','POST'])
 def getidx():
-    c3=db.query("select stock_code,open,high,close,volume from tb_stockinfo_day where stock_code in ('^DJI','^IXIC','^GSPC') and stat_date=(select max(stat_date)-1 from tb_stockinfo_day)")
+    c3=db.query("select stock_code,open,high,close,volume from tb_stockinfo_day where stock_code in ('^DJI','^IXIC','^GSPC') and stat_date=(case weekday(stat_date) when 0 then subdate(stat_date,3) WHEN 6 THEN SUBDATE(CURRENT_DATE,2) WHEN 5 THEN SUBDATE(CURRENT_DATE,1) else subdate(stat_date,1) end)")
     stockidx=c3.fetchall()
     return json.dumps(stockidx,cls=ComplexEncoder)
 
