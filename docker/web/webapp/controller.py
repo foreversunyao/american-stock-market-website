@@ -124,7 +124,7 @@ def stockstatsdirect():
 	return render_template("datastat.html")
 @app.route("/statsajax",methods=['GET','POST'])
 def stockstatsController():
-    c=db.query("select stat_date,sum(a),sum(b),sum(c),sum(d),sum(e),sum(f) from (select stat_date,case when (close-open)/open >=0.5 then 1 else 0 end 'a',case  when (close-open)/open <0.5 and (close-open)/open>=0.1 then 1 else 0 end 'b',case  when (close-open)/open <0.1 and (close-open)/open>=0.0 then 1 else 0 end 'c',case  when (close-open)/open <0.0 and (close-open)/open>=(-0.1) then 1 else 0 end 'd',case  when (close-open)/open <(-0.1) and (close-open)/open>=(-0.5) then 1 else 0 end 'e',case  when (close-open)/open <(-0.5)  then 1 else 0 end 'f'  from tb_stockinfo_day)  as new_tb group by stat_date")
+    c=db.query("select stat_date,sum(a),sum(b),sum(c),sum(d),sum(e),sum(f) from (select stat_date,case when (close-open)/open >=0.1 then 1 else 0 end 'a',case  when (close-open)/open <0.1 and (close-open)/open>=0.05 then 1 else 0 end 'b',case  when (close-open)/open <0.05 and (close-open)/open>=0.0 then 1 else 0 end 'c',case  when (close-open)/open <0.0 and (close-open)/open>=(-0.05) then 1 else 0 end 'd',case  when (close-open)/open <(-0.05) and (close-open)/open>=(-0.1) then 1 else 0 end 'e',case  when (close-open)/open <(-0.1)  then 1 else 0 end 'f'  from tb_stockinfo_day)  as new_tb group by stat_date")
     ones = c.fetchall()
     return json.dumps(ones,cls=ComplexEncoder);
 
