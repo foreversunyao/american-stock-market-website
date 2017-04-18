@@ -26,6 +26,7 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 ## Quick Example
 ######init data
+
 docker exec -it dockerid sh /crawler/stockinfo_collect/collect_daily.sh --collect stock data (price volume and so on)
 
 docker exec -it dockerid python /crawler/gnp/gnp_search.py "Alphabet Inc." --search alphabet news by google
