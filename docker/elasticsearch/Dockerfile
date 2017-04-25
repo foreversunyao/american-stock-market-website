@@ -1,10 +1,3 @@
-##
-#
-# Dockerfile for our Elastic Search cluster.  The dockerfile is based off of
-#  https://github.com/dockerfile/elasticsearch.
-#
-
-# Pull base image.
 FROM ubuntu:16.04
 
 ENV ES_PKG_NAME elasticsearch-1.7.3

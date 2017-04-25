@@ -39,6 +39,7 @@ try:
 			c=pycurl.Curl()
 			c.setopt(c.URL,article[2])
 			c.setopt(c.WRITEFUNCTION, buf.write)
+			c.setopt(pycurl.TIMEOUT,30)
 			c.perform()
 			idx= str(article[1]).lower()
 			print idx
@@ -47,7 +48,8 @@ try:
 		#doc={'title':article[3],'text':str(buf.getvalue()).encode('utf-8').strip()}
 			doc={'title':article[3],'text':buf.getvalue().decode('utf-8')}
 		#try:
-			res = es.index(index=idx.replace(" ", ""), doc_type='article', id=article[0], body=doc)
+			idx_processed=str(idx.replace(" ", "").replace("\\","").replace("/","").replace("*","").replace("?","").replace("\"","").replace("<","").replace(">","").replace("|","").replace(",","").replace(".","").replace(" ","")).lower()
+			res = es.index(index=idx_processed, doc_type='article', id=article[0], body=doc)
 		#except :
 			#continue
 		except Exception as e:

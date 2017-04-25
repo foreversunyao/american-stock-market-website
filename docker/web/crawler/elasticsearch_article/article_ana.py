@@ -39,7 +39,8 @@ try:
 			print article[1]
 			print article[0]
 			idx= str(article[1]).lower()
-			res= es.get(index=idx.replace(" ", ""), doc_type='article', id=int(str(article[0])))
+			idx_processed=idx.replace(" ", "").replace("\\","").replace("/","").replace("*","").replace("?","").replace("\"","").replace("<","").replace(">","").replace("|","").replace(",","").replace(".","").replace(" ","")
+			res= es.get(index=idx_processed, doc_type='article', id=int(str(article[0])))
 			vs = analyzer.polarity_scores(str(res))
 			vs_neg=vs['neg']
 			print article[0]

@@ -1,4 +1,4 @@
-FROM  mysql
+FROM mysql
 ENV MYSQL_ROOT_PASSWORD=admin \
   MYSQL_DATABASE=db_stock \
   MYSQL_USER=admin \
