@@ -25,7 +25,7 @@ It also has daily top gainers and top losers, and 20%, 5% up proportion and 20% 
 
 
 ## Quick Example  
-######cron job   
+###### cron job   
 docker exec -it dockerid sh /crawler/stockinfo_collect/collect_daily.sh --collect stock data (price volume and so on)  
 
 sh /data/usstock/usstock/docker/search_gnp.sh dockerid --search alphabet news by google  
@@ -34,10 +34,10 @@ docker exec -it dockerid python /crawler/elasticsearch_article/article.py --load
 
 docker exec -it dockerid python /crawler/elasticsearch_article/article_ana.py --analyze article by "SentimentIntensityAnalyzer"  
 
-######demo web  
+###### demo web  
 http://127.0.0.1:8888/index  
 
-######search result
+###### search result
 images:
    ![alt tag](https://github.com/foreversunyao/usstock/blob/master/Screen%20Shot%202017-03-09%20at%2012.10.42%20PM.png)
    
